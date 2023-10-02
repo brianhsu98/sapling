@@ -12,6 +12,8 @@ _HORIZONTAL_RULE = "---"
 
 
 def create_pull_request_title_and_body(
+    ui, 
+    current_github_body: str,
     commit_msg: str,
     pr_numbers_and_num_commits: List[Tuple[int, int]],
     pr_numbers_index: int,
@@ -64,7 +66,31 @@ def create_pull_request_title_and_body(
     owner, name = repository.get_upstream_owner_and_name()
     pr = pr_numbers_and_num_commits[pr_numbers_index][0]
     title = firstline(commit_msg)
+    ui.status_err(f"msg: {commit_msg}")
+
+    splitted_commit = commit_msg.split("\n")
+    if len(splitted_commit) > 1:
+        commit_msg = "\n".join(commit_msg.split("\n")[1:])
+
+    ui.status_err(f"msg: {commit_msg}")
+    ui.status_err(f"body: {current_github_body}")
+    # Remove the stack information from the curent github body, if it exists.
+    if current_github_body and _HORIZONTAL_RULE in current_github_body:
+        current_github_body = current_github_body.split(_HORIZONTAL_RULE)[1]
+
+    # Choose the longer of the two.
+    # Actually, shouldn't we always default to github? Ah well.
+    if len(commit_msg) < len(current_github_body):
+        commit_msg = current_github_body
+
+    ui.status_err(f"msg: {commit_msg}")
+
+    # Assign after choosing one.
     body = commit_msg
+    if not body:
+        body = ""
+    ui.status_err(f"Body: {body}")
+
     extra = []
     if len(pr_numbers_and_num_commits) > 1:
         if reviewstack:

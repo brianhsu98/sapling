@@ -501,8 +501,10 @@ changeset={if(desc, desc, emptymsg)}\n
  filechanges}
 defaulttitle=<Replace this line with a title. Use 1 line only, 67 chars or less>
 emptymsg={if(title, title, defaulttitle)}\n
- Summary: {summary}\n
- Test Plan: {testplan}\n
+  ## What changes are proposed in this pull request?\n
+  {summary}\n\n
+  ## How is this tested?\n
+  {testplan}\n\n
 filechanges={ifgt(parents|count, 1, filechangesmerge,
  ifgt(files|count, filechangethreshold, filechangesplain, filechangesdetailed))}
 filechangesmerge=
