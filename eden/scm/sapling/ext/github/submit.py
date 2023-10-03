@@ -389,8 +389,15 @@ async def create_pull_requests_serially(
         if workflow == SubmitWorkflow.SINGLE and parent:
             base = none_throws(parent.head_branch_name)
 
-        body = commit.get_msg()
-        title = firstline(body)
+        commit_msg = commit.get_msg()
+        splitted = commit_msg.splitlines()
+        if len(splitted) > 1:
+            title = splitted[0]
+            body = "\n".join(splitted[1:])
+        else:
+            # Fall back to original behavior if things weird.
+            body = commit_msg
+            title = firstline(body)
         result = await gh_submit.create_pull_request(
             hostname=repository.hostname,
             owner=owner,

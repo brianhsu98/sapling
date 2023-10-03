@@ -71,17 +71,23 @@ def create_pull_request_title_and_body(
     if len(commit_msg_split) > 1:
         commit_msg = "\n".join(commit_msg_split[1:])
     
-    ui.status_err("Rewriting body")
 
     if _HORIZONTAL_RULE in current_github_body:
         current_github_body = current_github_body.split(_HORIZONTAL_RULE)[0]
-    
+
     if len(current_github_body) > len(commit_msg):
-        ui.status_err("Using existing github body")
         commit_msg = current_github_body
 
-    if pr_numbers_index > 1:
-        commit_msg = "Note that this is a stacked PR: only review the top commit!\n" + commit_msg
+    if pr_numbers_index < len(pr_numbers_and_num_commits) - 1:
+        commit_msg = commit_msg.splitlines()
+        new_commit_msg = []
+        changes_str = "## What changes are proposed in this pull request?"
+        stack_msg = "Note that this is a stacked PR: only review the top commit!" 
+        for msg in commit_msg:
+            new_commit_msg.append(msg)
+            if msg == changes_str:
+                new_commit_msg.append(stack_msg)
+        commit_msg = "\n".join(new_commit_msg)
 
     body = commit_msg
 
