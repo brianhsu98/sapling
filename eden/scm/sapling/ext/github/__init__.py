@@ -118,7 +118,6 @@ def submit_cmd(ui, repo, *args, **opts):
 
     Returns 0 on success.
     """
-    1/0
     return submit.submit(ui, repo, *args, **opts)
 
 

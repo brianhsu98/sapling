@@ -294,8 +294,6 @@ async def rewrite_pull_request_body(
         hintutil.triggershow(ui, "unlink-closed-pr")
         return
 
-    1/0 
-
     result = await gh_submit.update_pull_request(
         repository.hostname, pr.node_id, title, body, base
     )
