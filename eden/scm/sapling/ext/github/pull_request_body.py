@@ -72,10 +72,13 @@ def create_pull_request_title_and_body(
         commit_msg = "\n".join(commit_msg_split[1:])
     
     if _HORIZONTAL_RULE in current_github_body:
-        current_github_body = current_github_body.split(_HORIZONTAL_RULE)[1]
+        current_github_body = current_github_body.split(_HORIZONTAL_RULE)[0]
     
-    if len(current_github_body) > commit_msg:
+    if len(current_github_body) > len(commit_msg):
         commit_msg = current_github_body
+
+    if pr_numbers_index > 1:
+        commit_msg = "Note that this is a stacked PR: only review the top commit!\n" + commit_msg
 
     body = commit_msg
 
