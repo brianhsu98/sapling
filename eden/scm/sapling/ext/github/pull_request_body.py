@@ -71,10 +71,13 @@ def create_pull_request_title_and_body(
     if len(commit_msg_split) > 1:
         commit_msg = "\n".join(commit_msg_split[1:])
     
+    ui.status_err("Rewriting body")
+
     if _HORIZONTAL_RULE in current_github_body:
         current_github_body = current_github_body.split(_HORIZONTAL_RULE)[0]
     
     if len(current_github_body) > len(commit_msg):
+        ui.status_err("Using existing github body")
         commit_msg = current_github_body
 
     if pr_numbers_index > 1:
