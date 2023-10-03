@@ -30,7 +30,6 @@ def submit(ui, repo, *args, **opts) -> int:
     """Create or update GitHub pull requests."""
     github_repo = check_github_repo(repo)
     is_draft = opts.get("draft")
-    1/0
     return asyncio.run(
         update_commits_in_stack(ui, repo, github_repo, is_draft=is_draft)
     )
@@ -148,7 +147,6 @@ async def get_partitions(ui, repo, store, filter) -> List[List[CommitData]]:
 async def update_commits_in_stack(
     ui, repo, github_repo: GitHubRepo, is_draft: bool
 ) -> int:
-    1/0
     parents = repo.dirstate.parents()
     if parents[0] == nullid:
         ui.status_err(_("commit has no parent: currently unsupported\n"))
@@ -164,7 +162,6 @@ async def update_commits_in_stack(
         return 0
     origin = get_push_origin(ui)
     use_placeholder_strategy = ui.configbool("github", "placeholder-strategy")
-    ui.status_err(_("placeholder stuff"))
     if use_placeholder_strategy:
         params = await create_placeholder_strategy_params(
             ui, partitions, github_repo, origin
@@ -194,7 +191,6 @@ async def update_commits_in_stack(
         ui.status_err(_("no pull requests to update\n"))
         return 0
 
-    ui.status_err("doing stuff")
     repository = params.repository
     if params.pull_requests_to_create:
         assert repository is not None
@@ -219,7 +215,6 @@ async def update_commits_in_stack(
                 is_draft,
             )
 
-    ui.status_err("doing MORE stuff")
     # Now that each pull request has a named branch pushed to GitHub, we can
     # create/update the pull request title and body, as appropriate.
     pr_numbers_and_num_commits = [
@@ -229,8 +224,6 @@ async def update_commits_in_stack(
     # Add the head of the stack to the sapling-pr-archive branch.
     tip = hex(partitions[0][0].node)
 
-    ui.status_err("we got to here!")
-    ui.status_err(f"partitions: {partitions}")
     if not repository:
         repository = await get_repository_for_origin(origin, github_repo.hostname)
     rewrite_and_archive_requests = [
@@ -262,7 +255,6 @@ async def rewrite_pull_request_body(
     # If available, use the head branch of the previous partition as the base
     # of this branch. Recall that partitions is ordered from the top of the
     # stack to the bottom.
-    ui.status_err("and now we're here")
     partition = partitions[index]
     base = repository.get_base_branch()
     if workflow == SubmitWorkflow.SINGLE and index < len(partitions) - 1:
@@ -273,10 +265,6 @@ async def rewrite_pull_request_body(
     pr = head_commit_data.pr
     assert pr
 
-    # This is what I need to change.
-    ui.status_err("Updating PR")
-    ui.status_err(f"PR body: {pr.body}")
-    ui.status_err(f"msg: {commit_msg}")
     title, body = create_pull_request_title_and_body(
         ui,
         pr.body,
