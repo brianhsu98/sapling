@@ -79,16 +79,17 @@ def create_pull_request_title_and_body(
         commit_msg = current_github_body
 
     if pr_numbers_index < len(pr_numbers_and_num_commits) - 1:
-        stack_msg = "Note that this is a stacked PR: only review the top commit!" 
-        if stack_msg not in commit_msg:
+        stack_msg = "Note that this is a stacked PR: only review the top commit!\n" 
+        if "stacked" not in commit_msg:
             commit_msg = commit_msg.splitlines()
             new_commit_msg = []
             changes_str = "## What changes are proposed in this pull request?"
-            for msg in commit_msg:
-                new_commit_msg.append(msg)
-                if msg == changes_str:
-                    new_commit_msg.append(stack_msg)
-            commit_msg = "\n".join(new_commit_msg)
+            if changes_str in commit_msg:
+                for msg in commit_msg:
+                    new_commit_msg.append(msg)
+                    if msg == changes_str:
+                        new_commit_msg.append(stack_msg)
+                commit_msg = "\n".join(new_commit_msg)
 
     body = commit_msg
 
