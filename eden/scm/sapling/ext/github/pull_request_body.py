@@ -91,7 +91,7 @@ def create_pull_request_title_and_body(
                         new_commit_msg.append(stack_msg)
                 commit_msg = "\n".join(new_commit_msg)
 
-    body = commit_msg
+    body = commit_msg + "\n"
 
     extra = []
     if len(pr_numbers_and_num_commits) > 1:
