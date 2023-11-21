@@ -231,15 +231,18 @@ async def update_commits_in_stack(
             partitions, index, workflow, pr_numbers_and_num_commits, repository, ui
         )
         for index in range(len(partitions))
-    ] + [
-        add_commit_to_archives(
-            oid_to_archive=tip,
-            ui=ui,
-            origin=origin,
-            repository=repository,
-            get_gitdir=get_gitdir,
-        )
-    ]
+    ] 
+    
+    # TODO: Disable archiving PRs. This risks losing some history of commits in github.
+    # [
+    #     add_commit_to_archives(
+    #         oid_to_archive=tip,
+    #         ui=ui,
+    #         origin=origin,
+    #         repository=repository,
+    #         get_gitdir=get_gitdir,
+    #     )
+    # ]
     await asyncio.gather(*rewrite_and_archive_requests)
     return 0
 
@@ -354,8 +357,8 @@ async def create_serial_strategy_params(
                     next_pull_request_number = result.unwrap()
             else:
                 next_pull_request_number += 1
-            # Consider including username in branch_name?
-            branch_name = f"pr{next_pull_request_number}"
+            # Hardcode my username for namespaced branch name.
+            branch_name = f"brianhsu98/pr{next_pull_request_number}"
             refs_to_update.append(f"{hex(top.node)}:refs/heads/{branch_name}")
             top.head_branch_name = branch_name
             pull_requests_to_create.append((top, branch_name))
